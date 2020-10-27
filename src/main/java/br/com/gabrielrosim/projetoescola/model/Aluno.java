@@ -7,11 +7,13 @@ import javax.persistence.*;
 public class Aluno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_aluno")
     private Long id;
     private String nome;
     private String cpf;
     @ManyToOne
     private Programa programa;
+    private Boolean active;
 
     @Deprecated
     public Aluno() {
@@ -21,6 +23,7 @@ public class Aluno {
         this.nome = nome;
         this.cpf = cpf;
         this.programa = programa;
+        this.active = false;
     }
 
     public Long getId() {
@@ -53,5 +56,28 @@ public class Aluno {
 
     public void setPrograma(Programa programa) {
         this.programa = programa;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Aluno aluno) {
+        aluno.active = true;
+    }
+
+    public void setInactive(Aluno aluno){
+        aluno.active = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Aluno{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", programa=" + programa +
+                ", active=" + active +
+                '}';
     }
 }
