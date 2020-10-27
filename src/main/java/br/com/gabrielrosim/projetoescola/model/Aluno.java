@@ -10,9 +10,11 @@ public class Aluno {
     @Column(name = "id_aluno")
     private Long id;
     private String nome;
+    @Column(unique = true, columnDefinition = "VARCHAR(14)")
     private String cpf;
     @ManyToOne
     private Programa programa;
+    @Column(columnDefinition = "TINYINT(1) default 0")
     private Boolean active;
 
     @Deprecated

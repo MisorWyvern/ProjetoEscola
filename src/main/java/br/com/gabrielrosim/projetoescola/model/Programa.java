@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,8 +20,8 @@ public class Programa {
     @Column(name = "id_programa")
     private Long id;
     private String nome;
-    private Timestamp dataInicio;
-    private Timestamp dataTermino;
+    private LocalDate dataInicio;
+    private LocalDate dataTermino;
     @ManyToMany(mappedBy = "programas")
     private List<Mentor> mentores;
 }

@@ -27,14 +27,20 @@ public class AlunoController {
     public ResponseEntity<Boolean> criarAluno(@RequestBody AlunoDTO alunoDTO){
         AlunoDTO savedAluno = alunoService.criarAluno(alunoDTO);
         System.out.println("Saved Aluno [Controller]: " + savedAluno);
-        URI uri = URI.create(String.format("/aluno/%d", savedAluno.getId()));
-        return ResponseEntity.created(uri).build();
+        URI location = URI.create(String.format("/aluno/%d", savedAluno.getId()));
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void atualizarAluno(@PathVariable("id") Long id, @RequestBody AlunoDTO alunoDTO){
+    public void updateAluno(@PathVariable("id") Long id, @RequestBody AlunoDTO alunoDTO){
+        alunoService.atualizarAluno(id, alunoDTO);
+    }
 
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAluno(@PathVariable("id") Long id){
+        alunoService.deletarAluno(id);
     }
 
 }
