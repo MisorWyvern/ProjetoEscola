@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/aluno")
@@ -19,8 +20,14 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<List<AlunoDTO>> getAluno(){
+    public ResponseEntity<List<AlunoDTO>> getAlunos(){
         return new ResponseEntity<List<AlunoDTO>>(alunoService.getAlunos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlunoDTO> getAlunos(@PathVariable("id") Long id){
+        Optional<AlunoDTO> alunoDTO = alunoService.getAlunoByIndex(id);
+        return alunoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
