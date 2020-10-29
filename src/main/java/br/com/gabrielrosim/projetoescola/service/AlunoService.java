@@ -25,20 +25,20 @@ public class AlunoService {
 
 
     public List<AlunoDTO> getAlunos() {
-        return alunoRepository.findByActive(true).get()
-                              .parallelStream()
-                              .map(AlunoMapper::toAlunoDTO)
-                              .collect(Collectors.toList());
+        if(alunoRepository.findByActive(true).isPresent()) {
+            return alunoRepository.findByActive(true).get()
+                    .parallelStream()
+                    .map(AlunoMapper::toAlunoDTO)
+                    .collect(Collectors.toList());
+        }
+        else{
+            return List.of();
+        }
     }
 
     public Optional<AlunoDTO> getAlunoByIndex(Long id) {
         return alunoRepository.findById(id)
                               .map(AlunoMapper::toAlunoDTO);
-//        Optional<Aluno> aluno = alunoRepository.findById(id);
-//        if(aluno.isPresent()){
-//            return AlunoMapper.toAlunoDTO(aluno.get());
-//        }
-//        return null;
     }
 
     public AlunoDTO criarAluno(AlunoDTO alunoDTO) {

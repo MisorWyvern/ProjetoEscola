@@ -1,6 +1,7 @@
 package br.com.gabrielrosim.projetoescola.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_alunos")
@@ -14,6 +15,8 @@ public class Aluno {
     private String cpf;
     @ManyToOne
     private Programa programa;
+    @OneToMany(mappedBy = "Mentoria.aluno")
+    private List<Mentoria> mentorias;
     @Column(columnDefinition = "TINYINT(1) default 0")
     private Boolean active;
 

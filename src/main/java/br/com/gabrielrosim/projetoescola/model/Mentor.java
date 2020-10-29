@@ -24,4 +24,6 @@ public class Mentor {
             joinColumns = {@JoinColumn(name="id_mentor")},
             inverseJoinColumns = {@JoinColumn(name="id_programa")})
     private List<Programa> programas;
+    @OneToMany(mappedBy = "Mentoria.mentor")
+    private List<Mentoria> mentorias;
 }

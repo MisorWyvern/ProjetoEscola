@@ -3,10 +3,10 @@ package br.com.gabrielrosim.projetoescola;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class ProjetoescolaApplicationTests {
 
-	@Test
+	//@Test
 	void contextLoads() {
 	}
 
