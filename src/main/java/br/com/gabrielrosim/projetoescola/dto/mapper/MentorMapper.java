@@ -13,6 +13,7 @@ public class MentorMapper {
         Mentor mentor = new Mentor(dto.getId(), dto.getNome(), dto.getCpf());
         programas.ifPresent(programaList -> mentor.setProgramas(List.copyOf(programaList)));
         mentorias.ifPresent(mentoriasList -> mentor.setMentorias(List.copyOf(mentoriasList)));
+        mentor.setActive(true);
         return mentor;
     }
 
