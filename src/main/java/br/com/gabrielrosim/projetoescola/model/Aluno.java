@@ -14,8 +14,9 @@ public class Aluno {
     @Column(unique = true, columnDefinition = "VARCHAR(14)")
     private String cpf;
     @ManyToOne
+    @JoinColumn(name="id_programa")
     private Programa programa;
-    @OneToMany(mappedBy = "Mentoria.aluno")
+    @OneToMany(mappedBy = "aluno")
     private List<Mentoria> mentorias;
     @Column(columnDefinition = "TINYINT(1) default 0")
     private Boolean active;
@@ -29,6 +30,7 @@ public class Aluno {
         this.cpf = cpf;
         this.programa = programa;
         this.active = false;
+        this.mentorias = List.of();
     }
 
     public Long getId() {

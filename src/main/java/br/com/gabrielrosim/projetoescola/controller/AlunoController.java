@@ -33,7 +33,6 @@ public class AlunoController {
     @PostMapping
     public ResponseEntity<Boolean> criarAluno(@RequestBody AlunoDTO alunoDTO){
         AlunoDTO savedAluno = alunoService.criarAluno(alunoDTO);
-        System.out.println("Saved Aluno [Controller]: " + savedAluno);
         URI location = URI.create(String.format("/aluno/%d", savedAluno.getId()));
         return ResponseEntity.created(location).build();
     }
