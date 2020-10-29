@@ -69,11 +69,11 @@ public class Aluno {
         return active;
     }
 
-    public void setActive(Aluno aluno) {
+    public static void setActive() {
         aluno.active = true;
     }
 
-    public void setInactive(Aluno aluno){
+    public static void setInactive(){
         aluno.active = false;
     }
 

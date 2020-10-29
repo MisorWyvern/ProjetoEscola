@@ -15,7 +15,7 @@ public class AlunoMapper {
         Aluno aluno = new Aluno(alunoDTO.getNome(), alunoDTO.getCpf(), null);
         programa.ifPresent(aluno::setPrograma);
         aluno.setId(alunoDTO.getId());
-        aluno.setActive(aluno);
+        aluno.setActive();
 
         return aluno;
     }

@@ -67,7 +67,10 @@ public class AlunoService {
 
     public void deletarAluno(Long id) {
         Optional<Aluno> aluno = alunoRepository.findById(id);
-        aluno.ifPresent(value -> alunoRepository.delete(value));
+        if(aluno.isPresent()){
+            aluno.get().setInactive();
+        }
+        //aluno.ifPresent(value -> alunoRepository.delete(value));
     }
 
 
