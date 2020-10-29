@@ -1,6 +1,5 @@
 package br.com.gabrielrosim.projetoescola.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,6 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tb_mentores")
 public class Mentor {
@@ -26,4 +24,14 @@ public class Mentor {
     private List<Programa> programas;
     @OneToMany(mappedBy = "mentor")
     private List<Mentoria> mentorias;
+    private Boolean active;
+
+    public Mentor(Long id, String nome, String cpf) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        programas = List.of();
+        mentorias = List.of();
+        active = false;
+    }
 }
