@@ -16,6 +16,7 @@ public class Mentor {
     @Column(name = "id_mentor")
     private Long id;
     private String nome;
+    @Column(unique = true, columnDefinition = "VARCHAR(14)")
     private String cpf;
     @ManyToMany
     @JoinTable(name="tb_mentor_programa",
@@ -24,6 +25,7 @@ public class Mentor {
     private List<Programa> programas;
     @OneToMany(mappedBy = "mentor")
     private List<Mentoria> mentorias;
+    @Column(columnDefinition = "TINYINT(1) default 0")
     private Boolean active;
 
     public Mentor(Long id, String nome, String cpf) {

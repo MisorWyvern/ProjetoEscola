@@ -8,6 +8,7 @@ import br.com.gabrielrosim.projetoescola.repository.AlunoRepository;
 import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,20 +26,19 @@ public class AlunoService {
 
 
     public List<AlunoDTO> getAlunos() {
-        if(alunoRepository.findByActive(true).isPresent()) {
+        if (alunoRepository.findByActive(true).isPresent()) {
             return alunoRepository.findByActive(true).get()
                     .parallelStream()
                     .map(AlunoMapper::toAlunoDTO)
                     .collect(Collectors.toList());
-        }
-        else{
+        } else {
             return List.of();
         }
     }
 
     public Optional<AlunoDTO> getAlunoByIndex(Long id) {
         return alunoRepository.findById(id)
-                              .map(AlunoMapper::toAlunoDTO);
+                .map(AlunoMapper::toAlunoDTO);
     }
 
     public AlunoDTO criarAluno(AlunoDTO alunoDTO) {
@@ -51,7 +51,7 @@ public class AlunoService {
     public void atualizarAluno(Long id, AlunoDTO alunoDTO) {
         Optional<Aluno> aluno = alunoRepository.findById(id);
 
-        if(aluno.isPresent()){
+        if (aluno.isPresent()) {
             Aluno alunoAtualizado = aluno.get();
             alunoAtualizado.setNome(alunoDTO.getNome());
             alunoAtualizado.setCpf(alunoDTO.getCpf());
@@ -59,18 +59,15 @@ public class AlunoService {
             programa.ifPresent(alunoAtualizado::setPrograma);
 
             alunoRepository.save(alunoAtualizado);
-        }
-        else{
+        } else {
             criarAluno(alunoDTO);
         }
     }
 
+    @Transactional
     public void deletarAluno(Long id) {
         Optional<Aluno> aluno = alunoRepository.findById(id);
-        if(aluno.isPresent()){
-            aluno.get().setInactive();
-        }
-        //aluno.ifPresent(value -> alunoRepository.delete(value));
+        aluno.ifPresent(aln -> aln.setActive(false));
     }
 
 

@@ -17,11 +17,14 @@ public class MentorService {
     @Autowired
     MentorRepository mentorRepository;
 
+    @Autowired
+    MentorMapper mentorMapper;
+
     public List<MentorDTO> getMentores() {
         if(mentorRepository.findByActive(true).isPresent()) {
             return mentorRepository.findByActive(true).get()
                     .parallelStream()
-                    .map(MentorMapper::toMentorDTO)
+                    .map(mentorMapper::toMentorDTO)
                     .collect(Collectors.toList());
         }
         else{
@@ -30,13 +33,27 @@ public class MentorService {
     }
 
     public Optional<MentorDTO> getMentorByIndex(Long id) {
-        return mentorRepository.findById(id)
-                               .map(MentorMapper::toMentorDTO);
+        Optional<Mentor> mentor = mentorRepository.findById(id);
+        if(mentor.isPresent()){
+            if(mentor.get().getActive() == true){
+                return mentor.map(mentorMapper::toMentorDTO);
+            }
+            else{
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
     }
 
     public MentorDTO criarMentor(MentorDTO dto) {
-        Mentor mentor = MentorMapper.toMentor(dto, Optional.of(List.of()), Optional.of(List.of()));
+        Mentor mentor = mentorMapper.toMentor(dto);
+        //Definindo valores padroes para novo Mentor
+        mentor.setProgramas(List.of());
+        mentor.setMentorias(List.of());
+        mentor.setActive(true);
+
         Mentor savedMentor = mentorRepository.save(mentor);
-        return MentorMapper.toMentorDTO(savedMentor);
+        System.out.println("Saved Mentor: " + savedMentor);
+        return mentorMapper.toMentorDTO(savedMentor);
     }
 }

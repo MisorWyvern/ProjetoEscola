@@ -69,12 +69,16 @@ public class Aluno {
         return active;
     }
 
-    public static void setActive() {
-        aluno.active = true;
+    public List<Mentoria> getMentorias() {
+        return mentorias;
     }
 
-    public static void setInactive(){
-        aluno.active = false;
+    public void setMentorias(List<Mentoria> mentorias) {
+        this.mentorias = mentorias;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     @Override
