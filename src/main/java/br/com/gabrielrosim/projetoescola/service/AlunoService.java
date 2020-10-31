@@ -42,6 +42,7 @@ public class AlunoService {
     }
 
     public AlunoDTO criarAluno(AlunoDTO alunoDTO) {
+        //Check valores nulos??? NOME | CPF | Programa
         Aluno aluno = AlunoMapper.toAluno(alunoDTO, programaRepository.findById(alunoDTO.getProgramaId()));
         Aluno savedAluno = alunoRepository.save(aluno);
         return AlunoMapper.toAlunoDTO(savedAluno);
@@ -52,6 +53,7 @@ public class AlunoService {
         Optional<Aluno> aluno = alunoRepository.findById(id);
 
         if (aluno.isPresent()) {
+            //Check valores nulos??? NOME | CPF | Programa
             Aluno alunoAtualizado = aluno.get();
             alunoAtualizado.setNome(alunoDTO.getNome());
             alunoAtualizado.setCpf(alunoDTO.getCpf());

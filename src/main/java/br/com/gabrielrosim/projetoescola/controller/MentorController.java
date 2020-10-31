@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -30,9 +31,23 @@ public class MentorController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> criarMentor(@RequestBody MentorDTO dto){
+    public ResponseEntity<Boolean> criarMentor(@Valid @RequestBody MentorDTO dto){
+        System.out.println(dto);
         MentorDTO savedMentor = mentorService.criarMentor(dto);
+        System.out.println("SavedMentor = " + savedMentor);
         URI location = URI.create(String.format("/mentor/%d",savedMentor.getId()));
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void atualizarMentor(@PathVariable Long id, @Valid @RequestBody MentorDTO dto){
+        mentorService.atualizarMentor(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deletarMentor(@PathVariable Long id){
+        mentorService.deletarMentor(id);
     }
 }
