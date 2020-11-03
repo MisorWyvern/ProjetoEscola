@@ -25,7 +25,7 @@ public class MentorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MentorDTO> getMentor(@PathVariable Long id){
+    public ResponseEntity<MentorDTO> getMentorById(@PathVariable Long id){
         Optional<MentorDTO> mentorDTO = mentorService.getMentorByIndex(id);
         return mentorDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
