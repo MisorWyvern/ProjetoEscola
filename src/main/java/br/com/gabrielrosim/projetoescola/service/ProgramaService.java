@@ -6,6 +6,7 @@ import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,6 +51,23 @@ public class ProgramaService {
         programa.setMentores(List.of());
         Programa savedPrograma = programaRepository.save(programa);
         return programaMapper.toProgramaDTO(savedPrograma);
+    }
+
+    @Transactional
+    public void atualiarPrograma(Long id, ProgramaDTO dto) {
+        Optional<Programa> programa = programaRepository.findById(id);
+        if(programa.isPresent()){
+            programa.get().setNome(dto.getNome());
+            if(dto.getDataInicio() != null){
+                programa.get().setDataInicio(dto.getDataInicio());
+            }
+            if(dto.getDataTermino() != null){
+                programa.get().setDataTermino(dto.getDataTermino());
+            }
+        }
+        else{
+            criarPrograma(dto);
+        }
     }
 
 

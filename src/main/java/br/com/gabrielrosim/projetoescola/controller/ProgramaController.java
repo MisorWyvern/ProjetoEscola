@@ -38,5 +38,10 @@ public class ProgramaController {
         return ResponseEntity.created(location).build();
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePrograma(@PathVariable Long id, @Valid @RequestBody ProgramaDTO dto){
+        programaService.atualiarPrograma(id, dto);
+    }
 
 }
