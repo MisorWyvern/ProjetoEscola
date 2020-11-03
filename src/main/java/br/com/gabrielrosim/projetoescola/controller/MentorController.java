@@ -32,9 +32,7 @@ public class MentorController {
 
     @PostMapping
     public ResponseEntity<Boolean> criarMentor(@Valid @RequestBody MentorDTO dto){
-        System.out.println(dto);
         MentorDTO savedMentor = mentorService.criarMentor(dto);
-        System.out.println("SavedMentor = " + savedMentor);
         URI location = URI.create(String.format("/mentor/%d",savedMentor.getId()));
         return ResponseEntity.created(location).build();
     }

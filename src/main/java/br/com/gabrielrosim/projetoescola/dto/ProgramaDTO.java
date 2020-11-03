@@ -14,7 +14,6 @@ public class ProgramaDTO {
     private Long id;
     @NotBlank(message = "Nome e obrigatorio")
     private String nome;
-    @NotBlank(message = "Data de Inicio e obrigatorio")
     private LocalDate dataInicio;
     private LocalDate dataTermino;
 }
