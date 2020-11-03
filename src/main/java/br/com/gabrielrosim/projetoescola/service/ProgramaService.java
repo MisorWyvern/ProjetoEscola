@@ -1,5 +1,6 @@
 package br.com.gabrielrosim.projetoescola.service;
 
+import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
 import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
 import br.com.gabrielrosim.projetoescola.dto.mapper.ProgramaMapper;
 import br.com.gabrielrosim.projetoescola.model.Programa;
@@ -21,6 +22,9 @@ public class ProgramaService {
 
     @Autowired
     ProgramaMapper programaMapper;
+
+    @Autowired
+    AlunoService alunoService;
 
     public List<ProgramaDTO> getProgramas() {
         return programaRepository.findAll()
@@ -70,5 +74,24 @@ public class ProgramaService {
         }
     }
 
+    @Transactional
+    public void deletarPrograma(Long id) {
+        Optional<Programa> programa = programaRepository.findById(id);
+        if(programa.isPresent()){
+            List<AlunoDTO> alunos = alunoService.getAlunosByPrograma(programa.get());
+            //Verificar relacao entre programa e mentor...
+            if(!(alunos.isEmpty())){
+                //Excecao?
+                System.out.println("Ainda existem alunos vinculados a esse programa.");
+                System.out.println("Alunos:");
+                for (AlunoDTO aluno : alunos) {
+                    System.out.println(aluno.getNome());
+                }
+            }
+            else{
+                programaRepository.delete(programa.get());
+            }
 
+        }
+    }
 }

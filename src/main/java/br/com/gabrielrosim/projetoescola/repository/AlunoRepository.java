@@ -1,6 +1,7 @@
 package br.com.gabrielrosim.projetoescola.repository;
 
 import br.com.gabrielrosim.projetoescola.model.Aluno;
+import br.com.gabrielrosim.projetoescola.model.Programa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,5 @@ import java.util.Optional;
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
     Optional<List<Aluno>> findByActive(Boolean active);
     Optional<Aluno> findByCpf(String cpf);
+    Optional<List<Aluno>> findByPrograma(Programa programa);
 }

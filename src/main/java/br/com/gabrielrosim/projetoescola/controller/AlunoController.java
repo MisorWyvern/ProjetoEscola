@@ -6,6 +6,7 @@ import br.com.gabrielrosim.projetoescola.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -31,7 +32,7 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> criarAluno(@RequestBody AlunoDTO alunoDTO){
+    public ResponseEntity<Boolean> criarAluno(@Validated @RequestBody AlunoDTO alunoDTO){
         AlunoDTO savedAluno = alunoService.criarAluno(alunoDTO);
         URI location = URI.create(String.format("/aluno/%d", savedAluno.getId()));
         return ResponseEntity.created(location).build();
@@ -39,7 +40,7 @@ public class AlunoController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateAluno(@PathVariable("id") Long id, @RequestBody AlunoDTO alunoDTO){
+    public void updateAluno(@PathVariable("id") Long id, @Validated @RequestBody AlunoDTO alunoDTO){
         alunoService.atualizarAluno(id, alunoDTO);
     }
 

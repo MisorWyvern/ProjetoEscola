@@ -44,4 +44,11 @@ public class ProgramaController {
         programaService.atualiarPrograma(id, dto);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deletePrograma(@PathVariable Long id){
+        programaService.deletarPrograma(id);
+    }
+
+
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 @NoArgsConstructor
@@ -12,8 +13,11 @@ import java.util.Optional;
 @Data
 public class AlunoDTO {
     private Long id;
+    @NotBlank(message = "Nome e obrigatorio")
     private String nome;
+    @NotBlank(message = "CPF e obrigatorio")
     private String cpf;
+    @NotBlank(message = "Programa e obrigatorio")
     private Long programaId;
 
 }
