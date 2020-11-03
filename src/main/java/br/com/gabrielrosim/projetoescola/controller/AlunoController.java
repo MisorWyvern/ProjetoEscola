@@ -1,7 +1,6 @@
 package br.com.gabrielrosim.projetoescola.controller;
 
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
-import br.com.gabrielrosim.projetoescola.model.Aluno;
 import br.com.gabrielrosim.projetoescola.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,9 +32,14 @@ public class AlunoController {
 
     @PostMapping
     public ResponseEntity<Boolean> criarAluno(@Validated @RequestBody AlunoDTO alunoDTO){
-        AlunoDTO savedAluno = alunoService.criarAluno(alunoDTO);
-        URI location = URI.create(String.format("/aluno/%d", savedAluno.getId()));
-        return ResponseEntity.created(location).build();
+        Optional<AlunoDTO> savedAluno = alunoService.criarAluno(alunoDTO);
+        if(savedAluno.isPresent()){
+            URI location = URI.create(String.format("/aluno/%d", savedAluno.get().getId()));
+            return ResponseEntity.created(location).build();
+        }
+        else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping(value = "/{id}")

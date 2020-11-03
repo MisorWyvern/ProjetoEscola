@@ -1,11 +1,11 @@
 package br.com.gabrielrosim.projetoescola.service;
 
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
+import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
 import br.com.gabrielrosim.projetoescola.dto.mapper.AlunoMapper;
 import br.com.gabrielrosim.projetoescola.model.Aluno;
 import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.AlunoRepository;
-import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +22,16 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
     @Autowired
-    private ProgramaRepository programaRepository;
+    private AlunoMapper alunoMapper;
+    @Autowired
+    private ProgramaService programaService;
 
 
     public List<AlunoDTO> getAlunos() {
         if (alunoRepository.findByActive(true).isPresent()) {
             return alunoRepository.findByActive(true).get()
                     .parallelStream()
-                    .map(AlunoMapper::toAlunoDTO)
+                    .map(alunoMapper::toAlunoDTO)
                     .collect(Collectors.toList());
         } else {
             return List.of();
@@ -40,7 +42,7 @@ public class AlunoService {
         if(alunoRepository.findByPrograma(programa).isPresent()){
             return alunoRepository.findByPrograma(programa).get()
                     .parallelStream()
-                    .map(AlunoMapper::toAlunoDTO)
+                    .map(alunoMapper::toAlunoDTO)
                     .collect(Collectors.toList());
         } else{
             return List.of();
@@ -49,13 +51,29 @@ public class AlunoService {
 
     public Optional<AlunoDTO> getAlunoByIndex(Long id) {
         return alunoRepository.findById(id)
-                .map(AlunoMapper::toAlunoDTO);
+                .map(alunoMapper::toAlunoDTO);
     }
 
-    public AlunoDTO criarAluno(AlunoDTO alunoDTO) {
-        Aluno aluno = AlunoMapper.toAluno(alunoDTO, programaRepository.findById(alunoDTO.getProgramaId()));
-        Aluno savedAluno = alunoRepository.save(aluno);
-        return AlunoMapper.toAlunoDTO(savedAluno);
+    public Optional<AlunoDTO> criarAluno(AlunoDTO alunoDTO) {
+        if(programaService.getProgramaByIndex(alunoDTO.getProgramaId()).isPresent()){
+            Aluno aluno = alunoMapper.toAluno(alunoDTO);
+            aluno.setMentorias(List.of());
+            aluno.setActive(true);
+
+            Aluno savedAluno = alunoRepository.save(aluno);
+            return Optional.of(alunoMapper.toAlunoDTO(savedAluno));
+        }
+        else{
+            return Optional.empty();
+        }
+
+
+
+
+
+
+
+
     }
 
 
@@ -66,7 +84,8 @@ public class AlunoService {
             Aluno alunoAtualizado = aluno.get();
             alunoAtualizado.setNome(alunoDTO.getNome());
             alunoAtualizado.setCpf(alunoDTO.getCpf());
-            Optional<Programa> programa = programaRepository.findById(alunoDTO.getProgramaId());
+            Optional<Programa> programa = programaService.getProgramaByIndex(alunoDTO.getProgramaId())
+                                                         .map(programaService.programaMapper::toPrograma);
             programa.ifPresent(alunoAtualizado::setPrograma);
 
             alunoRepository.save(alunoAtualizado);

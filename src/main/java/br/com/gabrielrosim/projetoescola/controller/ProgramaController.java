@@ -1,6 +1,7 @@
 package br.com.gabrielrosim.projetoescola.controller;
 
 import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
+import br.com.gabrielrosim.projetoescola.exception.ProgramaCurrentlyInUseException;
 import br.com.gabrielrosim.projetoescola.service.ProgramaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class ProgramaController {
 
     @Autowired
-    ProgramaService programaService;
+    private ProgramaService programaService;
 
     @GetMapping
     public ResponseEntity<List<ProgramaDTO>> getProgramas(){
@@ -46,8 +47,17 @@ public class ProgramaController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deletePrograma(@PathVariable Long id){
-        programaService.deletarPrograma(id);
+    public ResponseEntity<Boolean> deletePrograma(@PathVariable Long id){
+        try {
+            if (programaService.deletarPrograma(id)) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+        catch (ProgramaCurrentlyInUseException ex){
+            return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
