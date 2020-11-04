@@ -5,11 +5,10 @@ import br.com.gabrielrosim.projetoescola.service.DisciplinaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,4 +29,13 @@ public class DisciplinaController {
         Optional<DisciplinaDTO> disciplinaDTO = disciplinaService.getDisciplinaByIndex(id);
         return disciplinaDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PostMapping
+    public ResponseEntity<Boolean> createDisciplina(@Validated @RequestBody DisciplinaDTO dto){
+        DisciplinaDTO savedDisciplina = disciplinaService.criarDisciplina(dto);
+        URI location = URI.create(String.format("/disciplina/%d", savedDisciplina.getId()));
+        return ResponseEntity.created(location).build();
+    }
+
+
 }
