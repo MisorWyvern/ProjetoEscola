@@ -20,36 +20,35 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<List<AlunoDTO>> getAlunos(){
+    public ResponseEntity<List<AlunoDTO>> getAlunos() {
         return new ResponseEntity<List<AlunoDTO>>(alunoService.getAlunos(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlunoDTO> getAlunos(@PathVariable("id") Long id){
+    public ResponseEntity<AlunoDTO> getAlunos(@PathVariable("id") Long id) {
         Optional<AlunoDTO> alunoDTO = alunoService.getAlunoByIndex(id);
         return alunoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> criarAluno(@Validated @RequestBody AlunoDTO alunoDTO){
+    public ResponseEntity<Boolean> criarAluno(@Validated @RequestBody AlunoDTO alunoDTO) {
         Optional<AlunoDTO> savedAluno = alunoService.criarAluno(alunoDTO);
-        if(savedAluno.isPresent()){
+        if (savedAluno.isPresent()) {
             URI location = URI.create(String.format("/aluno/%d", savedAluno.get().getId()));
             return ResponseEntity.created(location).build();
-        }
-        else{
+        } else {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateAluno(@PathVariable("id") Long id, @Validated @RequestBody AlunoDTO alunoDTO){
+    public void updateAluno(@PathVariable("id") Long id, @Validated @RequestBody AlunoDTO alunoDTO) {
         alunoService.atualizarAluno(id, alunoDTO);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> deleteAluno(@PathVariable("id") Long id){
+    public ResponseEntity<Boolean> deleteAluno(@PathVariable("id") Long id) {
         return alunoService.deletarAluno(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 

@@ -1,14 +1,14 @@
 package br.com.gabrielrosim.projetoescola.dto;
 
-import br.com.gabrielrosim.projetoescola.model.Mentoria;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
