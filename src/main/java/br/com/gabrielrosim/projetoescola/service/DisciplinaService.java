@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DisciplinaService {
@@ -19,6 +21,14 @@ public class DisciplinaService {
     DisciplinaMapper disciplinaMapper;
 
     public List<DisciplinaDTO> getDisciplinas() {
-        return null;
+        return disciplinaRepository.findAll()
+                                   .parallelStream()
+                                   .map(disciplinaMapper::toDisciplinaDTO)
+                                   .collect(Collectors.toList());
+    }
+
+    public Optional<DisciplinaDTO> getDisciplinaByIndex(Long id) {
+        return disciplinaRepository.findById(id)
+                                   .map(disciplinaMapper::toDisciplinaDTO);
     }
 }
