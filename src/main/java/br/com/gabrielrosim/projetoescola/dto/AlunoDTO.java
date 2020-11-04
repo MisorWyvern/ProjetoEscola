@@ -16,6 +16,7 @@ import java.util.Optional;
 public class AlunoDTO {
     private Long id;
     @NotBlank(message = "Nome e obrigatorio")
+    @Size(max = 50)
     private String nome;
     @NotBlank(message = "CPF e obrigatorio")
     @Size(min = 14, max = 14, message = "CPF invalido. Deve ser como XXX.XXX.XXX-XX")

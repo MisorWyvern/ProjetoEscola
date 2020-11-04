@@ -24,6 +24,10 @@ public class Mentoria {
     @JoinColumn(name = "id_mentor")
     private Mentor mentor;
 
+    @ManyToOne
+    @JoinColumn(name = "id_disciplina")
+    private Disciplina disciplina;
+
     @Column(columnDefinition = "TINYINT(1) default 0")
     private Boolean active;
 }
