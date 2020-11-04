@@ -6,6 +6,7 @@ import br.com.gabrielrosim.projetoescola.model.Disciplina;
 import br.com.gabrielrosim.projetoescola.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,5 +48,19 @@ public class DisciplinaService {
         }
         Disciplina savedDisciplina = disciplinaRepository.save(disciplina);
         return disciplinaMapper.toDisciplinaDTO(savedDisciplina);
+    }
+
+
+    @Transactional
+    public Boolean deletarDisciplina(Long id) {
+        Optional<Disciplina> disciplina = disciplinaRepository.findById(id);
+
+        if(disciplina.isPresent()){
+            //Verificar Ligacao Com Mentoria
+            disciplinaRepository.delete(disciplina.get());
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
     }
 }

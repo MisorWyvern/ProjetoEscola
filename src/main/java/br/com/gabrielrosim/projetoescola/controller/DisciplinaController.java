@@ -37,5 +37,13 @@ public class DisciplinaController {
         return ResponseEntity.created(location).build();
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteDisciplina(@PathVariable Long id){
+        if(disciplinaService.deletarDisciplina(id)){
+            return ResponseEntity.ok().build();
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
