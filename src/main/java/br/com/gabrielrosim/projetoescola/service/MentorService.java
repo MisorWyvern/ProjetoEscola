@@ -64,8 +64,12 @@ public class MentorService {
     }
 
     @Transactional
-    public void deletarMentor(Long id) {
+    public Boolean deletarMentor(Long id) {
         Optional<Mentor> mentor = mentorRepository.findById(id);
-        mentor.ifPresent(mtr -> mtr.setActive(false));
+        if(mentor.isPresent()){
+            mentor.get().setActive(false);
+            return true;
+        }
+        return false;
     }
 }

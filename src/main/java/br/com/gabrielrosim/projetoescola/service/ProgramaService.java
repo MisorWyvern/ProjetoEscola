@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 public class ProgramaService {
 
     @Autowired
-    ProgramaRepository programaRepository;
+    private ProgramaRepository programaRepository;
 
     @Autowired
-    ProgramaMapper programaMapper;
+    protected ProgramaMapper programaMapper;
 
     @Autowired
-    AlunoService alunoService;
+    private AlunoService alunoService;
 
     public List<ProgramaDTO> getProgramas() {
         return programaRepository.findAll()

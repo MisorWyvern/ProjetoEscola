@@ -49,9 +49,8 @@ public class AlunoController {
     }
 
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteAluno(@PathVariable("id") Long id){
-        alunoService.deletarAluno(id);
+    public ResponseEntity<Boolean> deleteAluno(@PathVariable("id") Long id){
+        return alunoService.deletarAluno(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
 }

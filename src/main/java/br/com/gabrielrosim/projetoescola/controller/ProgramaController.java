@@ -46,7 +46,6 @@ public class ProgramaController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> deletePrograma(@PathVariable Long id){
         try {
             if (programaService.deletarPrograma(id)) {

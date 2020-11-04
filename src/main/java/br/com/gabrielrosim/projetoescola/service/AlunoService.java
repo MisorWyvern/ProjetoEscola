@@ -3,6 +3,7 @@ package br.com.gabrielrosim.projetoescola.service;
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
 import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
 import br.com.gabrielrosim.projetoescola.dto.mapper.AlunoMapper;
+import br.com.gabrielrosim.projetoescola.dto.mapper.ProgramaMapper;
 import br.com.gabrielrosim.projetoescola.model.Aluno;
 import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.AlunoRepository;
@@ -25,6 +26,8 @@ public class AlunoService {
     private AlunoMapper alunoMapper;
     @Autowired
     private ProgramaService programaService;
+    @Autowired
+    private ProgramaMapper programaMapper;
 
 
     public List<AlunoDTO> getAlunos() {
@@ -84,10 +87,11 @@ public class AlunoService {
             Aluno alunoAtualizado = aluno.get();
             alunoAtualizado.setNome(alunoDTO.getNome());
             alunoAtualizado.setCpf(alunoDTO.getCpf());
-            Optional<Programa> programa = programaService.getProgramaByIndex(alunoDTO.getProgramaId())
-                                                         .map(programaService.programaMapper::toPrograma);
-            programa.ifPresent(alunoAtualizado::setPrograma);
 
+            Optional<Programa> programa = programaService.getProgramaByIndex(alunoDTO.getProgramaId())
+                                                         .map(programaMapper::toPrograma);
+            programa.ifPresent(alunoAtualizado::setPrograma);
+            alunoAtualizado.setActive(true);
             alunoRepository.save(alunoAtualizado);
         } else {
             criarAluno(alunoDTO);
@@ -95,9 +99,13 @@ public class AlunoService {
     }
 
     @Transactional
-    public void deletarAluno(Long id) {
+    public Boolean deletarAluno(Long id) {
         Optional<Aluno> aluno = alunoRepository.findById(id);
-        aluno.ifPresent(aln -> aln.setActive(false));
+        if(aluno.isPresent()){
+            aluno.get().setActive(false);
+            return true;
+        }
+        return false;
     }
 
 

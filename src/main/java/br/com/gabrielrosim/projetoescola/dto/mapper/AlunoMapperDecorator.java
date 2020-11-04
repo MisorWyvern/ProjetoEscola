@@ -23,30 +23,6 @@ public class AlunoMapperDecorator implements AlunoMapper {
     @Autowired
     private AlunoRepository alunoRepository;
 
-//    @Override
-//    public Mentor toMentor(MentorDTO mentorDTO) {
-//        Mentor mentor = delegate.toMentor(mentorDTO);
-//
-//        if (mentor.getId() != null) {
-//            Optional<Mentor> mentorRepo = mentorRepository.findById(mentor.getId());
-//            if (mentorRepo.isPresent()) {
-//                mentor.setProgramas(mentorRepo.get().getProgramas());
-//                mentor.setMentorias(mentorRepo.get().getMentorias());
-//                mentor.setActive(mentorRepo.get().getActive());
-//            }
-//            else {
-//                mentor.setProgramas(List.of());
-//                mentor.setMentorias(List.of());
-//                mentor.setActive(true);
-//            }
-//        }
-//        else {
-//            mentor.setProgramas(List.of());
-//            mentor.setMentorias(List.of());
-//            mentor.setActive(true);
-//        }
-//        return mentor;
-//    }
     @Override
     public Aluno toAluno(AlunoDTO alunoDTO) {
         Aluno aluno = delegate.toAluno(alunoDTO);
