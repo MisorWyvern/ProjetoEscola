@@ -19,6 +19,7 @@ public class Programa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_programa")
     private Long id;
+    @Column(columnDefinition = "VARCHAR(50)")
     private String nome;
     private LocalDate dataInicio;
     private LocalDate dataTermino;

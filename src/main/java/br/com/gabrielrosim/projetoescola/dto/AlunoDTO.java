@@ -16,7 +16,7 @@ import java.util.Optional;
 public class AlunoDTO {
     private Long id;
     @NotBlank(message = "Nome e obrigatorio")
-    @Size(max = 50)
+    @Size(max = 50, message = "Nome do aluno nao pode ter mais que 50 caracteres.")
     private String nome;
     @NotBlank(message = "CPF e obrigatorio")
     @Size(min = 14, max = 14, message = "CPF invalido. Deve ser como XXX.XXX.XXX-XX")

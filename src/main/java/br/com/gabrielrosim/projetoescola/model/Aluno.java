@@ -10,6 +10,7 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_aluno")
     private Long id;
+    @Column(columnDefinition = "VARCHAR(50)")
     private String nome;
     @Column(unique = true, columnDefinition = "VARCHAR(14)")
     private String cpf;
