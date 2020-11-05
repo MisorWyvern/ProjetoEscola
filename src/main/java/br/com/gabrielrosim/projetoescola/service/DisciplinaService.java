@@ -5,6 +5,7 @@ import br.com.gabrielrosim.projetoescola.dto.mapper.DisciplinaMapper;
 import br.com.gabrielrosim.projetoescola.model.Disciplina;
 import br.com.gabrielrosim.projetoescola.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,5 +63,26 @@ public class DisciplinaService {
         }
 
         return Boolean.FALSE;
+    }
+
+    @Transactional
+    public void atualizarDisciplina(Long id, DisciplinaDTO dto) {
+        Optional<Disciplina> disciplina = disciplinaRepository.findById(id);
+
+        if(disciplina.isPresent()){
+            disciplina.get().setNome(dto.getNome());
+            if(dto.getDataInicio() != null){
+                disciplina.get().setDataInicio(dto.getDataInicio());
+            }
+            if(dto.getDataTermino() != null){
+                disciplina.get().setDataTermino(dto.getDataTermino());
+            }
+            if(dto.getNota() != null){
+                disciplina.get().setNota(dto.getNota());
+            }
+        }else{
+            criarDisciplina(dto);
+        }
+        return;
     }
 }
