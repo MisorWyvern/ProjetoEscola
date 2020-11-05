@@ -37,6 +37,7 @@ public class DisciplinaService {
     public DisciplinaDTO criarDisciplina(DisciplinaDTO dto) {
         Disciplina disciplina = disciplinaMapper.toDisciplina(dto);
         disciplina.setMentorias(List.of());
+        disciplina.setAvaliacoes(List.of());
         if(disciplina.getDataInicio() == null){
             disciplina.setDataInicio(LocalDate.now());
         }
@@ -49,12 +50,12 @@ public class DisciplinaService {
     }
 
 
-    @Transactional
     public Boolean deletarDisciplina(Long id) {
         Optional<Disciplina> disciplina = disciplinaRepository.findById(id);
 
         if(disciplina.isPresent()){
             //Verificar Ligacao Com Mentoria
+            //Verificar Ligacao Com Avaliacao
             disciplinaRepository.delete(disciplina.get());
             return Boolean.TRUE;
         }

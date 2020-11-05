@@ -24,4 +24,5 @@ public class Disciplina {
     private List<Mentoria> mentorias;
     @OneToMany(mappedBy = "disciplina")
     private List<Avaliacao> avaliacoes;
+
 }

@@ -28,6 +28,7 @@ public class DisciplinaMapperDecorator implements DisciplinaMapper{
         if(disciplina.getId() != null){
             Optional<Disciplina> disciplinaFromRepo = disciplinaRepository.findById(disciplina.getId());
             disciplinaFromRepo.ifPresent(value -> disciplina.setMentorias(List.copyOf(value.getMentorias())));
+            disciplinaFromRepo.ifPresent(dfr -> disciplina.setAvaliacoes(List.copyOf(dfr.getAvaliacoes())));
         }
 
         return disciplina;
