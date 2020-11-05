@@ -5,7 +5,6 @@ import br.com.gabrielrosim.projetoescola.dto.mapper.DisciplinaMapper;
 import br.com.gabrielrosim.projetoescola.model.Disciplina;
 import br.com.gabrielrosim.projetoescola.repository.DisciplinaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +43,7 @@ public class DisciplinaService {
         if(disciplina.getDataTermino() == null){
             disciplina.setDataTermino(disciplina.getDataInicio().plusDays(30));
         }
-        if(disciplina.getNota() == null){
-            disciplina.setNota(Double.valueOf(0));
-        }
+
         Disciplina savedDisciplina = disciplinaRepository.save(disciplina);
         return disciplinaMapper.toDisciplinaDTO(savedDisciplina);
     }
@@ -77,9 +74,7 @@ public class DisciplinaService {
             if(dto.getDataTermino() != null){
                 disciplina.get().setDataTermino(dto.getDataTermino());
             }
-            if(dto.getNota() != null){
-                disciplina.get().setNota(dto.getNota());
-            }
+
         }else{
             criarDisciplina(dto);
         }

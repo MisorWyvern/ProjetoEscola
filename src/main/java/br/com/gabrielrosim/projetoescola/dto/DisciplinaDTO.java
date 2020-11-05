@@ -20,7 +20,4 @@ public class DisciplinaDTO {
     private String nome;
     private LocalDate dataInicio;
     private LocalDate dataTermino;
-    @Min(value = 0, message = "O valor da nota nao pode ser inferior a zero.")
-    @Max(value = 10, message = "O valor da nota nao pode ser superior a dez.")
-    private Double nota;
 }

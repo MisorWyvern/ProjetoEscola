@@ -14,12 +14,14 @@ import java.util.List;
 public class Disciplina {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_disciplina")
     private Long id;
     @Column(columnDefinition = "VARCHAR(50)")
     private String nome;
     private LocalDate dataInicio;
     private LocalDate dataTermino;
-    private Double nota;
     @OneToMany(mappedBy = "disciplina")
     private List<Mentoria> mentorias;
+    @OneToMany(mappedBy = "disciplina")
+    private List<Avaliacao> avaliacoes;
 }
