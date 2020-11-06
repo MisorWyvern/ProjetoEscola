@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +37,15 @@ public class TipoAvaliacaoController {
         TipoAvaliacaoDTO savedTipoAvaliacao = tipoAvaliacaoService.criarTipoAvaliacao(dto);
         URI location = URI.create(String.format("/tipoavaliacao/%d", savedTipoAvaliacao.getId()));
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Boolean> updateTipoAvaliacao(@PathVariable Long id, @Validated @RequestBody TipoAvaliacaoDTO dto){
+        return tipoAvaliacaoService.atualizarTipoDisciplina(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteTipoAvaliacao(@PathVariable Long id){
+        return tipoAvaliacaoService.deletarTipoDisciplina(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }

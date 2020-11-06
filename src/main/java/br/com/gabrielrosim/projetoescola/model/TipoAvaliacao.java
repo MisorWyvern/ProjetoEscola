@@ -14,6 +14,6 @@ public class TipoAvaliacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_avaliacao")
     private Long id;
-    @Column(columnDefinition = "VARCHAR(5)")
+    @Column(columnDefinition = "VARCHAR(5)", unique = true)
     private String codigo;
 }
