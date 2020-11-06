@@ -2,6 +2,7 @@ package br.com.gabrielrosim.projetoescola.service;
 
 import br.com.gabrielrosim.projetoescola.dto.TipoAvaliacaoDTO;
 import br.com.gabrielrosim.projetoescola.dto.mapper.TipoAvaliacaoMapper;
+import br.com.gabrielrosim.projetoescola.exception.CodigoAlreadyExistsException;
 import br.com.gabrielrosim.projetoescola.model.TipoAvaliacao;
 import br.com.gabrielrosim.projetoescola.repository.TipoAvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,22 +38,38 @@ public class TipoAvaliacaoService {
         return tipoAvaliacao.map(tipoAv -> tipoAvaliacaoMapper.toTipoAvaliacaoDTO(tipoAv));
     }
 
-    public TipoAvaliacaoDTO criarTipoAvaliacao(TipoAvaliacaoDTO dto) {
+    public Optional<TipoAvaliacaoDTO> criarTipoAvaliacao(TipoAvaliacaoDTO dto) {
         TipoAvaliacao tipoAvaliacao = tipoAvaliacaoMapper.toTipoAvaliacao(dto);
-        TipoAvaliacao savedTipoAvaliacao = tipoAvaliacaoRepository.save(tipoAvaliacao);
 
-        return tipoAvaliacaoMapper.toTipoAvaliacaoDTO(savedTipoAvaliacao);
+        if (dto.getCodigo() == null) {
+            return Optional.empty();
+        }
+
+        Optional<TipoAvaliacao> tipoByCodigo = tipoAvaliacaoRepository.findByCodigo(dto.getCodigo());
+        if (tipoByCodigo.isPresent()) {
+            throw new CodigoAlreadyExistsException();
+        }
+
+        TipoAvaliacao savedTipoAvaliacao = tipoAvaliacaoRepository.save(tipoAvaliacao);
+        return Optional.of(tipoAvaliacaoMapper.toTipoAvaliacaoDTO(savedTipoAvaliacao));
     }
 
     @Transactional
     public Boolean atualizarTipoDisciplina(Long id, TipoAvaliacaoDTO dto) {
         Optional<TipoAvaliacao> tipoAvaliacao = tipoAvaliacaoRepository.findById(id);
 
-        if(tipoAvaliacao.isEmpty()){
+        if (tipoAvaliacao.isEmpty()) {
             return Boolean.FALSE;
         }
 
-        if(tipoAvaliacao.get().getCodigo() != null) {
+        Optional<TipoAvaliacao> tipoByCodigo = tipoAvaliacaoRepository.findByCodigo(dto.getCodigo());
+        if (tipoByCodigo.isPresent()) {
+            if (tipoByCodigo.get().getId() != id) {
+                throw new CodigoAlreadyExistsException();
+            }
+        }
+
+        if (tipoAvaliacao.get().getCodigo() != null) {
             tipoAvaliacao.get().setCodigo(dto.getCodigo());
         }
 
@@ -62,7 +79,7 @@ public class TipoAvaliacaoService {
     public Boolean deletarTipoDisciplina(Long id) {
         Optional<TipoAvaliacao> tipoAvaliacao = tipoAvaliacaoRepository.findById(id);
 
-        if(tipoAvaliacao.isEmpty()){
+        if (tipoAvaliacao.isEmpty()) {
             return Boolean.FALSE;
         }
 
