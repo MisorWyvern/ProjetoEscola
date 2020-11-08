@@ -116,4 +116,15 @@ public class AvaliacaoService {
 
         return Boolean.TRUE;
     }
+
+    public Boolean deletarAvaliacao(Long id) {
+        Optional<Avaliacao> avaliacao = avaliacaoRepository.findById(id);
+
+        if(avaliacao.isEmpty()){
+            return Boolean.FALSE;
+        }
+
+        avaliacaoRepository.delete(avaliacao.get());
+        return Boolean.TRUE;
+    }
 }

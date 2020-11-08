@@ -46,4 +46,9 @@ public class AvaliacaoController {
     public ResponseEntity<Boolean> updateAvaliacao(@PathVariable Long id, @Validated @RequestBody AvaliacaoDTO dto){
         return avaliacaoService.atualizarAvaliacao(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteAvaliacao(@PathVariable Long id){
+        return avaliacaoService.deletarAvaliacao(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
 }
