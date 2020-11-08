@@ -33,19 +33,19 @@ public class AvaliacaoMapperDecorator implements AvaliacaoMapper {
     public Avaliacao toAvaliacao(AvaliacaoDTO avaliacaoDTO) {
         Avaliacao avaliacao = delegate.toAvaliacao(avaliacaoDTO);
 
-        if (avaliacao.getId() != null) {
-            if (avaliacaoDTO.getIdDisciplina() != null) {
-                Optional<Disciplina> disciplina = disciplinaRepository.findById(avaliacaoDTO.getIdDisciplina());
-                disciplina.ifPresent(avaliacao::setDisciplina);
-            }
-            if (avaliacaoDTO.getIdAluno() != null) {
-                Optional<Aluno> aluno = alunoRepository.findById(avaliacaoDTO.getIdAluno());
-                aluno.ifPresent(avaliacao::setAluno);
-            }
-            if (avaliacaoDTO.getIdTipoAvaliacao() != null) {
-                Optional<TipoAvaliacao> tipoAvaliacao = tipoAvaliacaoRepository.findById(avaliacaoDTO.getIdTipoAvaliacao());
-                tipoAvaliacao.ifPresent(avaliacao::setTipoAvaliacao);
-            }
+        if (avaliacaoDTO.getIdDisciplina() != null) {
+            Optional<Disciplina> disciplina = disciplinaRepository.findById(avaliacaoDTO.getIdDisciplina());
+            disciplina.ifPresent(avaliacao::setDisciplina);
+        }
+
+        if (avaliacaoDTO.getIdTipoAvaliacao() != null) {
+            Optional<TipoAvaliacao> tipoAvaliacao = tipoAvaliacaoRepository.findById(avaliacaoDTO.getIdTipoAvaliacao());
+            tipoAvaliacao.ifPresent(avaliacao::setTipoAvaliacao);
+        }
+
+        if(avaliacaoDTO.getIdAluno() != null){
+            Optional<Aluno> aluno = alunoRepository.findById(avaliacaoDTO.getIdAluno());
+            aluno.ifPresent(avaliacao::setAluno);
         }
 
         return avaliacao;
@@ -55,23 +55,25 @@ public class AvaliacaoMapperDecorator implements AvaliacaoMapper {
     public AvaliacaoDTO toAvaliacaoDTO(Avaliacao avaliacao) {
         AvaliacaoDTO dto = delegate.toAvaliacaoDTO(avaliacao);
 
-        if (dto.getId() != null) {
-            if (avaliacao.getDisciplina() != null) {
-                if (avaliacao.getDisciplina().getId() != null) {
-                    dto.setIdDisciplina(avaliacao.getDisciplina().getId());
-                }
-            }
-            if (avaliacao.getAluno() != null) {
-                if (avaliacao.getAluno().getId() != null) {
-                    dto.setIdAluno(avaliacao.getAluno().getId());
-                }
-            }
-            if (avaliacao.getTipoAvaliacao() != null) {
-                if (avaliacao.getTipoAvaliacao().getId() != null) {
-                    dto.setIdTipoAvaliacao(avaliacao.getTipoAvaliacao().getId());
-                }
+
+        if (avaliacao.getDisciplina() != null) {
+            if (avaliacao.getDisciplina().getId() != null) {
+                dto.setIdDisciplina(avaliacao.getDisciplina().getId());
             }
         }
+
+        if (avaliacao.getTipoAvaliacao() != null) {
+            if (avaliacao.getTipoAvaliacao().getId() != null) {
+                dto.setIdTipoAvaliacao(avaliacao.getTipoAvaliacao().getId());
+            }
+        }
+
+        if(avaliacao.getAluno() != null){
+            if(avaliacao.getAluno().getId() != null){
+                dto.setIdAluno(avaliacao.getAluno().getId());
+            }
+        }
+
 
         return dto;
     }

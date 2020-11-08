@@ -19,8 +19,11 @@ public class Aluno {
     private Programa programa;
     @OneToMany(mappedBy = "aluno")
     private List<Mentoria> mentorias;
+    @OneToMany(mappedBy = "aluno")
+    private List<Avaliacao> avaliacoes;
     @Column(columnDefinition = "TINYINT(1) default 0")
     private Boolean active;
+
 
     @Deprecated
     public Aluno() {
