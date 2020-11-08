@@ -1,7 +1,6 @@
 package br.com.gabrielrosim.projetoescola.controller;
 
 import br.com.gabrielrosim.projetoescola.dto.AvaliacaoDTO;
-import br.com.gabrielrosim.projetoescola.model.Avaliacao;
 import br.com.gabrielrosim.projetoescola.service.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,12 @@ public class AvaliacaoController {
         return new ResponseEntity<List<AvaliacaoDTO>>(avaliacaoService.getAvaliacoes(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AvaliacaoDTO> getAvaliacaoByIndex(@PathVariable Long id){
+        Optional<AvaliacaoDTO> avaliacaoDTO = avaliacaoService.getAvaliacaoByIndex(id);
+        return avaliacaoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<String> createAvaliacao(@Validated @RequestBody AvaliacaoDTO dto){
         Optional<AvaliacaoDTO> savedAvaliacao = avaliacaoService.criarAvaliacao(dto);
@@ -37,4 +42,8 @@ public class AvaliacaoController {
         return ResponseEntity.created(location).build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Boolean> updateAvaliacao(@PathVariable Long id, @Validated @RequestBody AvaliacaoDTO dto){
+        return avaliacaoService.atualizarAvaliacao(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
 }

@@ -2,11 +2,12 @@ package br.com.gabrielrosim.projetoescola.service;
 
 import br.com.gabrielrosim.projetoescola.dto.AvaliacaoDTO;
 import br.com.gabrielrosim.projetoescola.dto.mapper.AvaliacaoMapper;
-import br.com.gabrielrosim.projetoescola.exception.AvaliacaoAlreadyExistsException;
+import br.com.gabrielrosim.projetoescola.exception.AvaliacaoCurrentlyInUseException;
 import br.com.gabrielrosim.projetoescola.model.Avaliacao;
 import br.com.gabrielrosim.projetoescola.repository.AvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,7 +56,7 @@ public class AvaliacaoService {
 
         if(avaliacaoRepository.findByDisciplinaAndTipoAvaliacaoAndAluno(
                 avaliacao.getDisciplina(), avaliacao.getTipoAvaliacao(), avaliacao.getAluno()).isPresent()){
-            throw new AvaliacaoAlreadyExistsException();
+            throw new AvaliacaoCurrentlyInUseException();
         }
 
         if(avaliacao.getNota() == null || avaliacao.getNota() < 0){
@@ -69,5 +70,50 @@ public class AvaliacaoService {
         Avaliacao savedAvaliacao = avaliacaoRepository.save(avaliacao);
         return Optional.of(avaliacaoMapper.toAvaliacaoDTO(savedAvaliacao));
 
+    }
+
+    public Optional<AvaliacaoDTO> getAvaliacaoByIndex(Long id) {
+        Optional<Avaliacao> avaliacao = avaliacaoRepository.findById(id);
+        return avaliacao.map(ava -> avaliacaoMapper.toAvaliacaoDTO(ava));
+    }
+
+    @Transactional
+    public Boolean atualizarAvaliacao(Long id, AvaliacaoDTO dto) {
+        Optional<Avaliacao> avaliacao = avaliacaoRepository.findById(id);
+
+        if(avaliacao.isEmpty()){
+            return Boolean.FALSE;
+        }
+
+        Avaliacao dtoAvaliacao = avaliacaoMapper.toAvaliacao(dto);
+
+        Optional<Avaliacao> avaliacaoDTAA = avaliacaoRepository.findByDisciplinaAndTipoAvaliacaoAndAluno(dtoAvaliacao.getDisciplina(), dtoAvaliacao.getTipoAvaliacao(), dtoAvaliacao.getAluno());
+        if(avaliacaoDTAA.isPresent()){
+            if(!avaliacaoDTAA.get().getId().equals(id)){
+                throw new AvaliacaoCurrentlyInUseException();
+            }
+        }
+
+        if(dtoAvaliacao.getDisciplina() != null){
+            avaliacao.get().setDisciplina(dtoAvaliacao.getDisciplina());
+        }
+
+        if(dtoAvaliacao.getTipoAvaliacao() != null){
+            avaliacao.get().setTipoAvaliacao(dtoAvaliacao.getTipoAvaliacao());
+        }
+
+        if(dtoAvaliacao.getAluno() != null){
+            avaliacao.get().setAluno(dtoAvaliacao.getAluno());
+        }
+
+        if(dtoAvaliacao.getNota() != null){
+            avaliacao.get().setNota(dtoAvaliacao.getNota());
+        }
+
+        if(dtoAvaliacao.getDataAplicacao() != null){
+            avaliacao.get().setDataAplicacao(dtoAvaliacao.getDataAplicacao());
+        }
+
+        return Boolean.TRUE;
     }
 }
