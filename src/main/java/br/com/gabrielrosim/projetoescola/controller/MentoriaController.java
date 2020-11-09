@@ -1,7 +1,6 @@
 package br.com.gabrielrosim.projetoescola.controller;
 
 import br.com.gabrielrosim.projetoescola.dto.MentoriaDTO;
-import br.com.gabrielrosim.projetoescola.model.Mentoria;
 import br.com.gabrielrosim.projetoescola.service.MentoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,5 +45,15 @@ public class MentoriaController {
     @PutMapping("/{id}")
     public ResponseEntity<Boolean> updateMentoria(@PathVariable Long id, @Validated @RequestBody MentoriaDTO dto){
         return mentoriaService.atualizarMentoria(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/reactivate/{id}")
+    public ResponseEntity<Boolean> reactivateMentoria(@PathVariable Long id){
+        return mentoriaService.reativarMentoria(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteMentoria(@PathVariable Long id){
+        return mentoriaService.deletarMentoria(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }

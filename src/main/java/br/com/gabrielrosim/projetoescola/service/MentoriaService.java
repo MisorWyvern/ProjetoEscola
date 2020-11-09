@@ -111,4 +111,30 @@ public class MentoriaService {
 
         return Boolean.TRUE;
     }
+
+    @Transactional
+    public Boolean reativarMentoria(Long id) {
+        Optional<Mentoria> mentoria = mentoriaRepository.findById(id);
+
+        if(mentoria.isEmpty()){
+            return Boolean.FALSE;
+        }
+
+        mentoria.get().setActive(true);
+        return Boolean.TRUE;
+    }
+
+    @Transactional
+    public Boolean deletarMentoria(Long id) {
+        Optional<Mentoria> mentoria = mentoriaRepository.findById(id);
+
+        if(mentoria.isEmpty()){
+            return Boolean.FALSE;
+        }
+
+        mentoria.get().setActive(false);
+        return Boolean.TRUE;
+    }
+
+
 }
