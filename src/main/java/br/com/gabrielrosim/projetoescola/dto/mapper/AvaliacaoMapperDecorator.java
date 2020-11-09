@@ -11,9 +11,11 @@ import br.com.gabrielrosim.projetoescola.repository.DisciplinaRepository;
 import br.com.gabrielrosim.projetoescola.repository.TipoAvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class AvaliacaoMapperDecorator implements AvaliacaoMapper {
 
     @Autowired

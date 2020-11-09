@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface MentorRepository extends CrudRepository<Mentor,Long> {
     Optional<List<Mentor>> findByActive(Boolean active);
+    Optional<Mentor> findByCpf(String cpf);
 }
