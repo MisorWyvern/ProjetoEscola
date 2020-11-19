@@ -1,11 +1,10 @@
 package br.com.gabrielrosim.projetoescola.dto.mapper;
 
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
-import br.com.gabrielrosim.projetoescola.dto.MentorDTO;
 import br.com.gabrielrosim.projetoescola.model.Aluno;
-import br.com.gabrielrosim.projetoescola.model.Mentor;
+import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.AlunoRepository;
-import br.com.gabrielrosim.projetoescola.repository.MentorRepository;
+import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -22,6 +21,8 @@ public class AlunoMapperDecorator implements AlunoMapper {
 
     @Autowired
     private AlunoRepository alunoRepository;
+    @Autowired
+    private ProgramaRepository programaRepository;
 
     @Override
     public Aluno toAluno(AlunoDTO alunoDTO) {
@@ -29,9 +30,15 @@ public class AlunoMapperDecorator implements AlunoMapper {
 
         if(aluno.getId() != null){
             Optional<Aluno> alunoFromRepo = alunoRepository.findById(aluno.getId());
-            alunoFromRepo.ifPresent(afr -> aluno.setPrograma(afr.getPrograma()));
-            alunoFromRepo.ifPresent(afr -> aluno.setMentorias(afr.getMentorias()));
-            alunoFromRepo.ifPresent(afr -> aluno.setActive(afr.getActive()));
+            if(alunoFromRepo.isPresent()){
+                aluno.setMentorias(List.copyOf(alunoFromRepo.get().getMentorias()));
+                aluno.setActive(alunoFromRepo.get().getActive());
+            }
+        }
+
+        Optional<Programa> programaFromRepo = programaRepository.findById(alunoDTO.getIdPrograma());
+        if(programaFromRepo.isPresent()){
+            aluno.setPrograma(programaFromRepo.get());
         }
 
         return aluno;
@@ -43,7 +50,7 @@ public class AlunoMapperDecorator implements AlunoMapper {
 
         if(aluno.getId() != null){
             if(aluno.getPrograma() != null) {
-                dto.setProgramaId(aluno.getPrograma().getId());
+                dto.setIdPrograma(aluno.getPrograma().getId());
             }
         }
 

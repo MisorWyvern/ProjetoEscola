@@ -1,10 +1,7 @@
 package br.com.gabrielrosim.projetoescola.dto.mapper;
 
-import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
 import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
-import br.com.gabrielrosim.projetoescola.model.Aluno;
 import br.com.gabrielrosim.projetoescola.model.Programa;
-import br.com.gabrielrosim.projetoescola.repository.AlunoRepository;
 import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

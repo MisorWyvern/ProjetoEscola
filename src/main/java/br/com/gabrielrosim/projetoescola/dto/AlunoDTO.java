@@ -22,6 +22,6 @@ public class AlunoDTO {
     @Size(min = 14, max = 14, message = "CPF invalido. Deve ser como XXX.XXX.XXX-XX")
     private String cpf;
     @NotNull(message = "Programa e obrigatorio")
-    private Long programaId;
+    private Long idPrograma;
 
 }

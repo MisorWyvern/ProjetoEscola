@@ -50,7 +50,7 @@ public class ProgramaService {
             programa.setDataInicio(LocalDate.now());
         }
         if (programa.getDataTermino() == null) {
-            programa.setDataTermino(programa.getDataInicio().plusDays(30));
+            programa.setDataTermino(programa.getDataInicio().plusDays(90));
         }
         programa.setMentores(List.of());
         Programa savedPrograma = programaRepository.save(programa);
@@ -77,9 +77,9 @@ public class ProgramaService {
     public boolean deletarPrograma(Long id) {
         Optional<Programa> programa = programaRepository.findById(id);
         if (programa.isPresent()) {
-            List<AlunoDTO> alunos = alunoService.getAlunosByPrograma(programa.get());
+            List<AlunoDTO> alunosByPrograma = alunoService.getAlunosByPrograma(programa.get());
             //Verificar relacao entre programa e mentor...
-            if (!(alunos.isEmpty())) {
+            if (!(alunosByPrograma.isEmpty())) {
                 throw new ProgramaCurrentlyInUseException("Program em uso. Existem alunos vinculados a esse programa.");
             } else {
                 programaRepository.delete(programa.get());

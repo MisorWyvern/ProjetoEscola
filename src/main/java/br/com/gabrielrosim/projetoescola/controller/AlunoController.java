@@ -43,8 +43,8 @@ public class AlunoController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateAluno(@PathVariable("id") Long id, @Validated @RequestBody AlunoDTO alunoDTO) {
-        alunoService.atualizarAluno(id, alunoDTO);
+    public ResponseEntity<Boolean> updateAluno(@PathVariable("id") Long id, @Validated @RequestBody AlunoDTO alunoDTO) {
+        return alunoService.atualizarAluno(id, alunoDTO) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(value = "/{id}")
