@@ -44,11 +44,16 @@ public class MentorService {
         return Optional.empty();
     }
 
-    public MentorDTO criarMentor(MentorDTO dto) {
+    public Optional<MentorDTO> criarMentor(MentorDTO dto) {
         Mentor mentor = mentorMapper.toMentor(dto);
+
+        if(mentorRepository.findByCpf(dto.getCpf()).isPresent()){
+            return Optional.empty();
+        }
+
         Mentor savedMentor = mentorRepository.save(mentor);
-        System.out.println("Saved Mentor: " + savedMentor);
-        return mentorMapper.toMentorDTO(savedMentor);
+
+        return Optional.of(mentorMapper.toMentorDTO(savedMentor));
     }
 
     @Transactional

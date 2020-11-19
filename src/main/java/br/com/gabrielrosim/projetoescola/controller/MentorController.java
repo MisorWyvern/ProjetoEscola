@@ -32,8 +32,13 @@ public class MentorController {
 
     @PostMapping
     public ResponseEntity<Boolean> criarMentor(@Valid @RequestBody MentorDTO dto){
-        MentorDTO savedMentor = mentorService.criarMentor(dto);
-        URI location = URI.create(String.format("/mentor/%d",savedMentor.getId()));
+        Optional<MentorDTO> savedMentor = mentorService.criarMentor(dto);
+
+        if(savedMentor.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        URI location = URI.create(String.format("/mentor/%d",savedMentor.get().getId()));
         return ResponseEntity.created(location).build();
     }
 
