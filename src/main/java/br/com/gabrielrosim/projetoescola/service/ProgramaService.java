@@ -2,10 +2,15 @@ package br.com.gabrielrosim.projetoescola.service;
 
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
 import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
+import br.com.gabrielrosim.projetoescola.dto.mapper.MentorMapper;
 import br.com.gabrielrosim.projetoescola.dto.mapper.ProgramaMapper;
+import br.com.gabrielrosim.projetoescola.exception.MentorIsPresentInProgramaException;
 import br.com.gabrielrosim.projetoescola.exception.ProgramaCurrentlyInUseException;
+import br.com.gabrielrosim.projetoescola.model.Mentor;
 import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,10 @@ public class ProgramaService {
 
     @Autowired
     private AlunoService alunoService;
+    @Autowired
+    private MentorService mentorService;
+    @Autowired
+    private MentorMapper mentorMapper;
 
     public List<ProgramaDTO> getProgramas() {
         return programaRepository.findAll()
@@ -58,7 +67,7 @@ public class ProgramaService {
     }
 
     @Transactional
-    public void atualiarPrograma(Long id, ProgramaDTO dto) {
+    public void atualizarPrograma(Long id, ProgramaDTO dto) {
         Optional<Programa> programa = programaRepository.findById(id);
         if (programa.isPresent()) {
             programa.get().setNome(dto.getNome());
@@ -87,5 +96,24 @@ public class ProgramaService {
             }
         }
         return false;
+    }
+
+    //VERIFICAR...
+    public Boolean addMentorToPrograma(Long idPrograma, Long idMentor) {
+        Optional<Programa> programa = programaRepository.findById(idPrograma);
+        Optional<Mentor> mentor = mentorService.getMentorByIndex(idMentor).map(mentorMapper::toMentor);
+
+
+        if(programa.isEmpty() || mentor.isEmpty()){
+            return Boolean.FALSE;
+        }
+
+        if(programa.get().getMentores().contains(mentor.get())){
+            throw new MentorIsPresentInProgramaException();
+        }
+
+        programa.get().getMentores().add(mentor.get());
+        programaRepository.save(programa.get());
+        return Boolean.TRUE;
     }
 }

@@ -13,7 +13,11 @@ import java.util.Date;
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {CodigoAlreadyExistsException.class, ProgramaCurrentlyInUseException.class})
+    @ExceptionHandler(value = {AvaliacaoCurrentlyInUseException.class,
+                               CodigoAlreadyExistsException.class,
+                               CpfCurrentlyInUseException.class,
+                               MentoriaCurrentlyInUseException.class,
+                               ProgramaCurrentlyInUseException.class})
     public final ResponseEntity<ExceptionResponse> handleCodigoAlreadyExists(RuntimeException ex, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         ExceptionResponse exceptionResponse = new ExceptionResponse(

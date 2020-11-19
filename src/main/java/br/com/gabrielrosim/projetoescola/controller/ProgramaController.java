@@ -39,10 +39,15 @@ public class ProgramaController {
         return ResponseEntity.created(location).build();
     }
 
+    @PostMapping("/{idPrograma}/{idMentor}")
+    public ResponseEntity<Boolean> createProgramaMentor(@PathVariable Long idPrograma, @PathVariable Long idMentor){
+        return programaService.addMentorToPrograma(idPrograma, idMentor) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updatePrograma(@PathVariable Long id, @Valid @RequestBody ProgramaDTO dto){
-        programaService.atualiarPrograma(id, dto);
+        programaService.atualizarPrograma(id, dto);
     }
 
     @DeleteMapping("/{id}")
