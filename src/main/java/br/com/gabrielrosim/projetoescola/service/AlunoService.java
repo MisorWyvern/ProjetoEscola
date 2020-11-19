@@ -30,15 +30,22 @@ public class AlunoService {
     private ProgramaMapper programaMapper;
 
 
-    public List<AlunoDTO> getAlunos() {
-        if (alunoRepository.findByActive(true).isPresent()) {
-            return alunoRepository.findByActive(true).get()
-                    .parallelStream()
-                    .map(alunoMapper::toAlunoDTO)
-                    .collect(Collectors.toList());
-        } else {
+    public List<AlunoDTO> getAlunos(Optional<Boolean> active) {
+        if (active.isEmpty()) {
+                return alunoRepository.findAll()
+                        .parallelStream()
+                        .map(alunoMapper::toAlunoDTO)
+                        .collect(Collectors.toList());
+        }
+
+        if(alunoRepository.findByActive(active.get()).isEmpty()){
             return List.of();
         }
+
+        return alunoRepository.findByActive(active.get()).get()
+                .parallelStream()
+                .map(alunoMapper::toAlunoDTO)
+                .collect(Collectors.toList());
     }
 
     public List<AlunoDTO> getAlunosByPrograma(Programa programa) {
@@ -84,8 +91,8 @@ public class AlunoService {
         }
 
         Optional<Aluno> alunoByCpf = alunoRepository.findByCpf(alunoDTO.getCpf());
-        if(alunoByCpf.isPresent()){
-            if(alunoByCpf.get().getCpf() == alunoDTO.getCpf()){
+        if (alunoByCpf.isPresent()) {
+            if (alunoByCpf.get().getCpf() == alunoDTO.getCpf()) {
                 throw new CpfCurrentlyInUseException();
             }
         }

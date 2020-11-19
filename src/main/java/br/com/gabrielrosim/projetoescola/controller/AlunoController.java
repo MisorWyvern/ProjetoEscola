@@ -20,8 +20,8 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<List<AlunoDTO>> getAlunos() {
-        return new ResponseEntity<List<AlunoDTO>>(alunoService.getAlunos(), HttpStatus.OK);
+    public ResponseEntity<List<AlunoDTO>> getAlunos(@RequestParam Optional<Boolean> active) {
+        return new ResponseEntity<List<AlunoDTO>>(alunoService.getAlunos(active), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
