@@ -17,7 +17,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                                CodigoAlreadyExistsException.class,
                                CpfCurrentlyInUseException.class,
                                MentoriaCurrentlyInUseException.class,
-                               ProgramaCurrentlyInUseException.class})
+                               MentorIsPresentInProgramaException.class,
+                               ProgramaContainsMentoresException.class,
+                               ProgramaCurrentlyInUseException.class,
+                               })
     public final ResponseEntity<ExceptionResponse> handleCodigoAlreadyExists(RuntimeException ex, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         ExceptionResponse exceptionResponse = new ExceptionResponse(

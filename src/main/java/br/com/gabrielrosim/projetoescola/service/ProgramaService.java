@@ -1,17 +1,18 @@
 package br.com.gabrielrosim.projetoescola.service;
 
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
+import br.com.gabrielrosim.projetoescola.dto.MentorDTO;
 import br.com.gabrielrosim.projetoescola.dto.ProgramaDTO;
 import br.com.gabrielrosim.projetoescola.dto.mapper.MentorMapper;
 import br.com.gabrielrosim.projetoescola.dto.mapper.ProgramaMapper;
 import br.com.gabrielrosim.projetoescola.exception.MentorIsPresentInProgramaException;
+import br.com.gabrielrosim.projetoescola.exception.ProgramaContainsMentoresException;
 import br.com.gabrielrosim.projetoescola.exception.ProgramaCurrentlyInUseException;
 import br.com.gabrielrosim.projetoescola.model.Mentor;
 import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,7 @@ public class ProgramaService {
     private MentorMapper mentorMapper;
 
     public List<ProgramaDTO> getProgramas() {
-        return programaRepository.findAll()
+        return programaRepository.findAll(Sort.by(Sort.Direction.ASC, "nome"))
                 .parallelStream()
                 .map(programaMapper::toProgramaDTO)
                 .collect(Collectors.toList());
@@ -45,11 +46,12 @@ public class ProgramaService {
 
     public Optional<ProgramaDTO> getProgramaByIndex(Long id) {
         Optional<Programa> programa = programaRepository.findById(id);
-        if (programa.isPresent()) {
-            return programa.map(programaMapper::toProgramaDTO);
-        } else {
+
+        if (programa.isEmpty()) {
             return Optional.empty();
         }
+
+        return programa.map(programaMapper::toProgramaDTO);
     }
 
 
@@ -83,37 +85,75 @@ public class ProgramaService {
     }
 
     @Transactional
-    public boolean deletarPrograma(Long id) {
+    public Boolean deletarPrograma(Long id) {
         Optional<Programa> programa = programaRepository.findById(id);
-        if (programa.isPresent()) {
-            List<AlunoDTO> alunosByPrograma = alunoService.getAlunosByPrograma(programa.get());
-            //Verificar relacao entre programa e mentor...
-            if (!(alunosByPrograma.isEmpty())) {
-                throw new ProgramaCurrentlyInUseException("Program em uso. Existem alunos vinculados a esse programa.");
-            } else {
-                programaRepository.delete(programa.get());
-                return true;
-            }
+
+        if (programa.isEmpty()) {
+            return Boolean.FALSE;
         }
-        return false;
+
+        List<AlunoDTO> alunosByPrograma = alunoService.getAlunosByPrograma(programa.get());
+        if (!alunosByPrograma.isEmpty()) {
+            throw new ProgramaCurrentlyInUseException("Program em uso. Existem alunos vinculados a esse programa.");
+        }
+
+        if (!programa.get().getMentores().isEmpty()) {
+            throw new ProgramaContainsMentoresException();
+        }
+
+        programaRepository.delete(programa.get());
+        return Boolean.TRUE;
     }
 
-    //VERIFICAR...
+    @Transactional
     public Boolean addMentorToPrograma(Long idPrograma, Long idMentor) {
         Optional<Programa> programa = programaRepository.findById(idPrograma);
         Optional<Mentor> mentor = mentorService.getMentorByIndex(idMentor).map(mentorMapper::toMentor);
 
 
-        if(programa.isEmpty() || mentor.isEmpty()){
+        if (programa.isEmpty() || mentor.isEmpty()) {
             return Boolean.FALSE;
         }
 
-        if(programa.get().getMentores().contains(mentor.get())){
+        if (programa.get().getMentores().contains(mentor.get())) {
             throw new MentorIsPresentInProgramaException();
         }
 
         programa.get().getMentores().add(mentor.get());
+        mentor.get().getProgramas().add(programa.get());
         programaRepository.save(programa.get());
         return Boolean.TRUE;
+    }
+
+    @Transactional
+    public Boolean removeMentorFromPrograma(Long idPrograma, Long idMentor) {
+        Optional<Programa> programa = programaRepository.findById(idPrograma);
+        Optional<Mentor> mentor = mentorService.getMentorByIndex(idMentor).map(mentorMapper::toMentor);
+
+
+        if (programa.isEmpty() || mentor.isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        if (!programa.get().getMentores().contains(mentor.get())) {
+            return Boolean.FALSE;
+        }
+
+        programa.get().getMentores().remove(mentor.get());
+        mentor.get().getProgramas().remove(programa.get());
+        return Boolean.TRUE;
+    }
+
+    public Optional<List<MentorDTO>> getMentoresFromProgramaByIndex(Long id) {
+        List<Mentor> listMentores = programaRepository.findAllMentoresFromProgramaById(id);
+
+        if (listMentores.isEmpty()) {
+            return Optional.of(List.of());
+        }
+
+        return Optional.of(listMentores
+                .parallelStream()
+                .map(mentorMapper::toMentorDTO)
+                .collect(Collectors.toList()));
     }
 }
