@@ -20,8 +20,8 @@ public class MentorController {
     MentorService mentorService;
 
     @GetMapping
-    public ResponseEntity<List<MentorDTO>> getMentores(){
-        return new ResponseEntity<List<MentorDTO>>(mentorService.getMentores(), HttpStatus.OK);
+    public ResponseEntity<List<MentorDTO>> getMentores(@RequestParam Optional<Boolean> active){
+        return new ResponseEntity<>(mentorService.getMentores(active), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -43,9 +43,13 @@ public class MentorController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void atualizarMentor(@PathVariable Long id, @Valid @RequestBody MentorDTO dto){
-        mentorService.atualizarMentor(id, dto);
+    public ResponseEntity<Boolean> atualizarMentor(@PathVariable Long id, @Valid @RequestBody MentorDTO dto){
+        return mentorService.atualizarMentor(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<Boolean> activateMentor(@PathVariable Long id){
+        return mentorService.activateMentor(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
