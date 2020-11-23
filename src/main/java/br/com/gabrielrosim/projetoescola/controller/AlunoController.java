@@ -47,6 +47,11 @@ public class AlunoController {
         return alunoService.atualizarAluno(id, alunoDTO) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<Boolean> activateAluno(@PathVariable Long id){
+        return alunoService.activateAluno(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteAluno(@PathVariable("id") Long id) {
         return alunoService.deletarAluno(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();

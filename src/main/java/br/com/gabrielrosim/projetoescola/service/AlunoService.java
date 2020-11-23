@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class AlunoService {
-    //private List<Aluno> alunos = new ArrayList<>();
-
 
     @Autowired
     private AlunoRepository alunoRepository;
@@ -32,13 +30,13 @@ public class AlunoService {
 
     public List<AlunoDTO> getAlunos(Optional<Boolean> active) {
         if (active.isEmpty()) {
-                return alunoRepository.findAll()
-                        .parallelStream()
-                        .map(alunoMapper::toAlunoDTO)
-                        .collect(Collectors.toList());
+            return alunoRepository.findAll()
+                    .parallelStream()
+                    .map(alunoMapper::toAlunoDTO)
+                    .collect(Collectors.toList());
         }
 
-        if(alunoRepository.findByActive(active.get()).isEmpty()){
+        if (alunoRepository.findByActive(active.get()).isEmpty()) {
             return List.of();
         }
 
@@ -49,14 +47,14 @@ public class AlunoService {
     }
 
     public List<AlunoDTO> getAlunosByPrograma(Programa programa) {
-        if (alunoRepository.findByPrograma(programa).isPresent()) {
-            return alunoRepository.findByPrograma(programa).get()
-                    .parallelStream()
-                    .map(alunoMapper::toAlunoDTO)
-                    .collect(Collectors.toList());
-        } else {
+        if (alunoRepository.findByPrograma(programa).isEmpty()) {
             return List.of();
         }
+
+        return alunoRepository.findByPrograma(programa).get()
+                .parallelStream()
+                .map(alunoMapper::toAlunoDTO)
+                .collect(Collectors.toList());
     }
 
     public Optional<AlunoDTO> getAlunoByIndex(Long id) {
@@ -92,18 +90,16 @@ public class AlunoService {
 
         Optional<Aluno> alunoByCpf = alunoRepository.findByCpf(alunoDTO.getCpf());
         if (alunoByCpf.isPresent()) {
-            if (alunoByCpf.get().getCpf() == alunoDTO.getCpf()) {
+            if (!alunoByCpf.get().getId().equals(aluno.get().getId())) {
                 throw new CpfCurrentlyInUseException();
             }
         }
 
         aluno.get().setNome(alunoDTO.getNome());
         aluno.get().setCpf(alunoDTO.getCpf());
-
         Optional<Programa> programa = programaService.getProgramaByIndex(alunoDTO.getIdPrograma())
                 .map(programaMapper::toPrograma);
         programa.ifPresent(aluno.get()::setPrograma);
-        aluno.get().setActive(true);
         return Boolean.TRUE;
     }
 
@@ -119,5 +115,15 @@ public class AlunoService {
         return Boolean.TRUE;
     }
 
+    @Transactional
+    public Boolean activateAluno(Long id) {
+        Optional<Aluno> aluno = alunoRepository.findById(id);
 
+        if(aluno.isEmpty()){
+            return Boolean.FALSE;
+        }
+
+        aluno.get().setActive(Boolean.TRUE);
+        return Boolean.TRUE;
+    }
 }

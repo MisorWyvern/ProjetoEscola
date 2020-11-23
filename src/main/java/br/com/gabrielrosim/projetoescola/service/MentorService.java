@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 public class MentorService {
 
     @Autowired
-    MentorRepository mentorRepository;
+    private MentorRepository mentorRepository;
 
     @Autowired
-    MentorMapper mentorMapper;
+    private MentorMapper mentorMapper;
 
     public List<MentorDTO> getMentores(Optional<Boolean> active) {
         if (active.isEmpty()) {
@@ -93,6 +93,7 @@ public class MentorService {
         return Boolean.TRUE;
     }
 
+    @Transactional
     public Boolean activateMentor(Long id) {
         Optional<Mentor> mentor = mentorRepository.findById(id);
 
@@ -100,7 +101,7 @@ public class MentorService {
             return Boolean.FALSE;
         }
 
-        mentor.get().setActive(true);
+        mentor.get().setActive(Boolean.TRUE);
         return Boolean.TRUE;
     }
 }
