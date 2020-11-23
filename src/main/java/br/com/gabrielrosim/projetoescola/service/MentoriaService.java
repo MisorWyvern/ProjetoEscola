@@ -113,7 +113,7 @@ public class MentoriaService {
     }
 
     @Transactional
-    public Boolean reativarMentoria(Long id) {
+    public Boolean activateMentoria(Long id) {
         Optional<Mentoria> mentoria = mentoriaRepository.findById(id);
 
         if(mentoria.isEmpty()){

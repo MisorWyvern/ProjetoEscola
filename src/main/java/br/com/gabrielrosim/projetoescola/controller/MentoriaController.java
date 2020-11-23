@@ -47,9 +47,9 @@ public class MentoriaController {
         return mentoriaService.atualizarMentoria(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/reactivate/{id}")
+    @PutMapping("/activate/{id}")
     public ResponseEntity<Boolean> reactivateMentoria(@PathVariable Long id){
-        return mentoriaService.reativarMentoria(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        return mentoriaService.activateMentoria(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
