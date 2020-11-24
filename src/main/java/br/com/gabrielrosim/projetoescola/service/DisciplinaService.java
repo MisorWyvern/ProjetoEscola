@@ -24,24 +24,24 @@ public class DisciplinaService {
 
     public List<DisciplinaDTO> getDisciplinas() {
         return disciplinaRepository.findAll()
-                                   .parallelStream()
-                                   .map(disciplinaMapper::toDisciplinaDTO)
-                                   .collect(Collectors.toList());
+                .parallelStream()
+                .map(disciplinaMapper::toDisciplinaDTO)
+                .collect(Collectors.toList());
     }
 
     public Optional<DisciplinaDTO> getDisciplinaByIndex(Long id) {
         return disciplinaRepository.findById(id)
-                                   .map(disciplinaMapper::toDisciplinaDTO);
+                .map(disciplinaMapper::toDisciplinaDTO);
     }
 
     public DisciplinaDTO criarDisciplina(DisciplinaDTO dto) {
         Disciplina disciplina = disciplinaMapper.toDisciplina(dto);
         disciplina.setMentorias(List.of());
         disciplina.setAvaliacoes(List.of());
-        if(disciplina.getDataInicio() == null){
+        if (disciplina.getDataInicio() == null) {
             disciplina.setDataInicio(LocalDate.now());
         }
-        if(disciplina.getDataTermino() == null){
+        if (disciplina.getDataTermino() == null) {
             disciplina.setDataTermino(disciplina.getDataInicio().plusDays(30));
         }
 
@@ -53,7 +53,7 @@ public class DisciplinaService {
     public Boolean deletarDisciplina(Long id) {
         Optional<Disciplina> disciplina = disciplinaRepository.findById(id);
 
-        if(disciplina.isPresent()){
+        if (disciplina.isPresent()) {
             //Verificar Ligacao Com Mentoria
             //Verificar Ligacao Com Avaliacao
             disciplinaRepository.delete(disciplina.get());
@@ -64,21 +64,21 @@ public class DisciplinaService {
     }
 
     @Transactional
-    public void atualizarDisciplina(Long id, DisciplinaDTO dto) {
+    public Boolean atualizarDisciplina(Long id, DisciplinaDTO dto) {
         Optional<Disciplina> disciplina = disciplinaRepository.findById(id);
 
-        if(disciplina.isPresent()){
-            disciplina.get().setNome(dto.getNome());
-            if(dto.getDataInicio() != null){
-                disciplina.get().setDataInicio(dto.getDataInicio());
-            }
-            if(dto.getDataTermino() != null){
-                disciplina.get().setDataTermino(dto.getDataTermino());
-            }
-
-        }else{
-            criarDisciplina(dto);
+        if(disciplina.isEmpty()){
+            return Boolean.FALSE;
         }
-        return;
+
+        disciplina.get().setNome(dto.getNome());
+        if (dto.getDataInicio() != null) {
+            disciplina.get().setDataInicio(dto.getDataInicio());
+        }
+        if (dto.getDataTermino() != null) {
+            disciplina.get().setDataTermino(dto.getDataTermino());
+        }
+
+        return Boolean.TRUE;
     }
 }

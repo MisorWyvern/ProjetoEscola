@@ -51,9 +51,8 @@ public class ProgramaController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updatePrograma(@PathVariable Long id, @Valid @RequestBody ProgramaDTO dto) {
-        programaService.atualizarPrograma(id, dto);
+    public ResponseEntity<Boolean> updatePrograma(@PathVariable Long id, @Valid @RequestBody ProgramaDTO dto) {
+        return programaService.atualizarPrograma(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

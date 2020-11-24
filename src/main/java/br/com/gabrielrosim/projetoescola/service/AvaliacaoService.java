@@ -86,7 +86,6 @@ public class AvaliacaoService {
         }
 
         Avaliacao dtoAvaliacao = avaliacaoMapper.toAvaliacao(dto);
-
         Optional<Avaliacao> avaliacaoDTAA = avaliacaoRepository.findByDisciplinaAndTipoAvaliacaoAndAluno(dtoAvaliacao.getDisciplina(), dtoAvaliacao.getTipoAvaliacao(), dtoAvaliacao.getAluno());
         if(avaliacaoDTAA.isPresent()){
             if(!avaliacaoDTAA.get().getId().equals(id)){

@@ -69,19 +69,21 @@ public class ProgramaService {
     }
 
     @Transactional
-    public void atualizarPrograma(Long id, ProgramaDTO dto) {
+    public Boolean atualizarPrograma(Long id, ProgramaDTO dto) {
         Optional<Programa> programa = programaRepository.findById(id);
-        if (programa.isPresent()) {
-            programa.get().setNome(dto.getNome());
-            if (dto.getDataInicio() != null) {
-                programa.get().setDataInicio(dto.getDataInicio());
-            }
-            if (dto.getDataTermino() != null) {
-                programa.get().setDataTermino(dto.getDataTermino());
-            }
-        } else {
-            criarPrograma(dto);
+
+        if (programa.isEmpty()) {
+            return Boolean.FALSE;
         }
+
+        programa.get().setNome(dto.getNome());
+        if (dto.getDataInicio() != null) {
+            programa.get().setDataInicio(dto.getDataInicio());
+        }
+        if (dto.getDataTermino() != null) {
+            programa.get().setDataTermino(dto.getDataTermino());
+        }
+        return Boolean.TRUE;
     }
 
     @Transactional

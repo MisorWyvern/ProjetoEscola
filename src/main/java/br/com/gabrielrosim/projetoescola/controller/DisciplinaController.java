@@ -37,10 +37,9 @@ public class DisciplinaController {
         return ResponseEntity.created(location).build();
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public void updateDisciplina(@PathVariable Long id, @Validated @RequestBody DisciplinaDTO dto){
-        disciplinaService.atualizarDisciplina(id, dto);
+    public ResponseEntity<Boolean> updateDisciplina(@PathVariable Long id, @Validated @RequestBody DisciplinaDTO dto){
+        return disciplinaService.atualizarDisciplina(id, dto) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
