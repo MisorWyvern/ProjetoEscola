@@ -35,6 +35,7 @@ public class Aluno {
         this.programa = programa;
         this.active = false;
         this.mentorias = List.of();
+        this.avaliacoes = List.of();
     }
 
     public Long getId() {

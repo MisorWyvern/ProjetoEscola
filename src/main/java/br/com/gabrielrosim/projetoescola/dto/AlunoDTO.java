@@ -1,6 +1,5 @@
 package br.com.gabrielrosim.projetoescola.dto;
 
-import br.com.gabrielrosim.projetoescola.model.Programa;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Optional;
 
 @NoArgsConstructor
 @AllArgsConstructor
