@@ -8,6 +8,8 @@ import br.com.gabrielrosim.projetoescola.model.Aluno;
 import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,22 +30,19 @@ public class AlunoService {
     private ProgramaMapper programaMapper;
 
 
-    public List<AlunoDTO> getAlunos(Optional<Boolean> active) {
+    public Page<AlunoDTO> getAlunos(Optional<Boolean> active, Pageable pageable) {
         if (active.isEmpty()) {
-            return alunoRepository.findAll()
-                    .parallelStream()
-                    .map(alunoMapper::toAlunoDTO)
-                    .collect(Collectors.toList());
+            return alunoRepository.findAll(pageable)
+                    .map(alunoMapper::toAlunoDTO);
         }
 
-        if (alunoRepository.findByActive(active.get()).isEmpty()) {
-            return List.of();
+        if (alunoRepository.findByActive(active.get(), pageable).isEmpty()) {
+            return Page.empty();
         }
 
-        return alunoRepository.findByActive(active.get()).get()
-                .parallelStream()
-                .map(alunoMapper::toAlunoDTO)
-                .collect(Collectors.toList());
+        return alunoRepository.findByActive(active.get(), pageable).get()
+                .map(alunoMapper::toAlunoDTO);
+
     }
 
     public List<AlunoDTO> getAlunosByPrograma(Programa programa) {
@@ -119,7 +118,7 @@ public class AlunoService {
     public Boolean activateAluno(Long id) {
         Optional<Aluno> aluno = alunoRepository.findById(id);
 
-        if(aluno.isEmpty()){
+        if (aluno.isEmpty()) {
             return Boolean.FALSE;
         }
 

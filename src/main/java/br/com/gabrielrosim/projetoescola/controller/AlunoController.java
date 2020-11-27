@@ -3,15 +3,19 @@ package br.com.gabrielrosim.projetoescola.controller;
 import br.com.gabrielrosim.projetoescola.dto.AlunoDTO;
 import br.com.gabrielrosim.projetoescola.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping("/aluno")
 public class AlunoController {
@@ -20,8 +24,9 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<List<AlunoDTO>> getAlunos(@RequestParam Optional<Boolean> active) {
-        return new ResponseEntity<List<AlunoDTO>>(alunoService.getAlunos(active), HttpStatus.OK);
+    public ResponseEntity<Page<AlunoDTO>> getAlunos(@RequestParam Optional<Boolean> active,
+                                                    @PageableDefault(sort="nome", direction = Sort.Direction.ASC) Pageable pageable) {
+        return new ResponseEntity<Page<AlunoDTO>>(alunoService.getAlunos(active, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

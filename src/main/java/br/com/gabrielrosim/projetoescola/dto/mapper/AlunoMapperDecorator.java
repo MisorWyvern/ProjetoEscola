@@ -51,6 +51,7 @@ public class AlunoMapperDecorator implements AlunoMapper {
         if(aluno.getId() != null){
             if(aluno.getPrograma() != null) {
                 dto.setIdPrograma(aluno.getPrograma().getId());
+                dto.setNomePrograma(aluno.getPrograma().getNome());
             }
         }
 

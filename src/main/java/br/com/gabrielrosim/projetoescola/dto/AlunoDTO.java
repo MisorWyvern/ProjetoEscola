@@ -21,5 +21,5 @@ public class AlunoDTO {
     private String cpf;
     @NotNull(message = "Programa e obrigatorio")
     private Long idPrograma;
-
+    private String nomePrograma;
 }
