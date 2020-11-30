@@ -13,9 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
@@ -45,11 +43,12 @@ public class AlunoServiceTest {
         aluno2.setId(2L);
         AlunoDTO dto1 = new AlunoDTO(aluno1.getId(),aluno1.getNome(),aluno1.getCpf(),aluno1.getPrograma().getId(), aluno1.getPrograma().getNome());
         AlunoDTO dto2 = new AlunoDTO(aluno2.getId(),aluno2.getNome(),aluno2.getCpf(),aluno2.getPrograma().getId(), aluno2.getPrograma().getNome());
-        Pageable pageable = PageRequest.of(0,5);
+        Pageable pageable = PageRequest.of(0,10, Sort.unsorted());
+        Page<Aluno> alunoPage = new PageImpl<>(List.of(aluno1, aluno2), pageable, 2);
 
         Optional<Boolean> active = Optional.empty();
 
-        Mockito.when(alunoRepository.findAll()).thenReturn(List.of(aluno1, aluno2));
+        Mockito.when(alunoRepository.findAll(pageable)).thenReturn(alunoPage);
         Mockito.when(alunoMapper.toAlunoDTO(aluno1)).thenReturn(dto1);
         Mockito.when(alunoMapper.toAlunoDTO(aluno2)).thenReturn(dto2);
         Page<AlunoDTO> listaAlunosDTO = alunoService.getAlunos(active, pageable);
@@ -57,7 +56,7 @@ public class AlunoServiceTest {
         AlunoDTO alunoDTO1 = listaAlunosDTO.toList().get(0);
         AlunoDTO alunoDTO2 = listaAlunosDTO.toList().get(1);
 
-        Mockito.verify(alunoRepository, times(1)).findAll();
+        Mockito.verify(alunoRepository, times(1)).findAll(pageable);
         Mockito.verify(alunoMapper, times(1)).toAlunoDTO(aluno1);
         Mockito.verify(alunoMapper, times(1)).toAlunoDTO(aluno2);
         Assertions.assertEquals(2, listaAlunosDTO.toList().size());
