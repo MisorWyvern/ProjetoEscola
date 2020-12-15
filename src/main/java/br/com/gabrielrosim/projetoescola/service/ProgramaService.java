@@ -12,14 +12,14 @@ import br.com.gabrielrosim.projetoescola.model.Mentor;
 import br.com.gabrielrosim.projetoescola.model.Programa;
 import br.com.gabrielrosim.projetoescola.repository.ProgramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProgramaService {
@@ -37,11 +37,9 @@ public class ProgramaService {
     @Autowired
     private MentorMapper mentorMapper;
 
-    public List<ProgramaDTO> getProgramas() {
-        return programaRepository.findAll(Sort.by(Sort.Direction.ASC, "nome"))
-                .parallelStream()
-                .map(programaMapper::toProgramaDTO)
-                .collect(Collectors.toList());
+    public Page<ProgramaDTO> getProgramas(Pageable pageable) {
+        return programaRepository.findAll(pageable)
+                .map(programaMapper::toProgramaDTO);
     }
 
     public Optional<ProgramaDTO> getProgramaByIndex(Long id) {
@@ -146,16 +144,8 @@ public class ProgramaService {
         return Boolean.TRUE;
     }
 
-    public Optional<List<MentorDTO>> getMentoresFromProgramaByIndex(Long id) {
-        List<Mentor> listMentores = programaRepository.findAllMentoresFromProgramaById(id);
-
-        if (listMentores.isEmpty()) {
-            return Optional.of(List.of());
-        }
-
-        return Optional.of(listMentores
-                .parallelStream()
-                .map(mentorMapper::toMentorDTO)
-                .collect(Collectors.toList()));
+    public Page<MentorDTO> getMentoresFromProgramaByIndex(Long id, Pageable pageable) {
+        return programaRepository.findAllMentoresFromProgramaById(id, pageable)
+                .map(mentorMapper::toMentorDTO);
     }
 }
