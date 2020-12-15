@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.net.URI;
 import java.util.Optional;
@@ -24,8 +25,10 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<Page<AlunoDTO>> getAlunos(@RequestParam Optional<Boolean> active,
-                                                    @PageableDefault(sort="nome", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Page<AlunoDTO>> getAlunos(//@ApiParam(type = "boolean")
+                                                    @RequestParam Optional<Boolean> active,
+                                                    @ApiIgnore
+                                                    @PageableDefault(sort = "nome", direction = Sort.Direction.ASC) Pageable pageable) {
         return new ResponseEntity<Page<AlunoDTO>>(alunoService.getAlunos(active, pageable), HttpStatus.OK);
     }
 
@@ -53,7 +56,7 @@ public class AlunoController {
     }
 
     @PutMapping("/activate/{id}")
-    public ResponseEntity<Boolean> activateAluno(@PathVariable Long id){
+    public ResponseEntity<Boolean> activateAluno(@PathVariable Long id) {
         return alunoService.activateAluno(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
