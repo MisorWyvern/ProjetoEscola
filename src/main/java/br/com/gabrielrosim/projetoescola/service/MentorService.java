@@ -6,12 +6,12 @@ import br.com.gabrielrosim.projetoescola.exception.CpfCurrentlyInUseException;
 import br.com.gabrielrosim.projetoescola.model.Mentor;
 import br.com.gabrielrosim.projetoescola.repository.MentorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MentorService {
@@ -22,22 +22,18 @@ public class MentorService {
     @Autowired
     private MentorMapper mentorMapper;
 
-    public List<MentorDTO> getMentores(Optional<Boolean> active) {
+    public Page<MentorDTO> getMentores(Optional<Boolean> active, Pageable pageable) {
         if (active.isEmpty()) {
-            return mentorRepository.findAll()
-                    .parallelStream()
-                    .map(mentorMapper::toMentorDTO)
-                    .collect(Collectors.toList());
+            return mentorRepository.findAll(pageable)
+                    .map(mentorMapper::toMentorDTO);
         }
 
-        if (mentorRepository.findByActive(active.get()).isEmpty()) {
-            return List.of();
+        if (mentorRepository.findByActive(active.get(), pageable).isEmpty()) {
+            return Page.empty();
         }
 
-        return mentorRepository.findByActive(active.get()).get()
-                .parallelStream()
-                .map(mentorMapper::toMentorDTO)
-                .collect(Collectors.toList());
+        return mentorRepository.findByActive(active.get(), pageable).get()
+                .map(mentorMapper::toMentorDTO);
     }
 
     public Optional<MentorDTO> getMentorByIndex(Long id) {

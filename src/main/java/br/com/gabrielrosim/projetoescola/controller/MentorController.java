@@ -3,6 +3,10 @@ package br.com.gabrielrosim.projetoescola.controller;
 import br.com.gabrielrosim.projetoescola.dto.MentorDTO;
 import br.com.gabrielrosim.projetoescola.service.MentorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +24,10 @@ public class MentorController {
     MentorService mentorService;
 
     @GetMapping
-    public ResponseEntity<List<MentorDTO>> getMentores(@RequestParam Optional<Boolean> active){
-        return new ResponseEntity<>(mentorService.getMentores(active), HttpStatus.OK);
+    public ResponseEntity<Page<MentorDTO>> getMentores(@RequestParam Optional<Boolean> active,
+                                                       @PageableDefault(sort = "nome", direction = Sort.Direction.ASC)
+                                                       Pageable pageable){
+        return new ResponseEntity<Page<MentorDTO>>(mentorService.getMentores(active, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
